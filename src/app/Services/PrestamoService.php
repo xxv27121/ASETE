@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exceptions\MaterialNoDisponibleException;
+use App\Exceptions\LimitePrestamosException;
 use App\Repos\MaterialRepo;
 
 class PrestamoService
@@ -22,6 +23,13 @@ class PrestamoService
 
         if (!$material->isDisponible()) {
             throw new MaterialNoDisponibleException($material->getTitulo());
+        }
+
+        // si la consulta que hacemos en MaterialRepo da 3 o mas lanza la excepcion.
+        $total = $this->repo->contarPrestamosActivos($usuarioId);
+
+        if ($total >= 3) {
+            throw new LimitePrestamosException();
         }
 
         $material->prestar();

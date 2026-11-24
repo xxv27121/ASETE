@@ -6,6 +6,7 @@ require_once __DIR__ . '/../app/Includes/exceptions.php';
 require_once __DIR__ . '/../app/Includes/auth.php';
 require_once __DIR__ . '/../app/Config/db.php';
 
+use App\Exceptions\LimitePrestamosException;
 use App\Exceptions\MaterialNoDisponibleException;
 use App\Exceptions\MaterialNoEncontradoException;
 use App\Repos\MaterialRepo;
@@ -31,6 +32,9 @@ try {
     http_response_code(404);
     $error = $e->getMessage();
 } catch (MaterialNoDisponibleException $e) {
+    http_response_code(400);
+    $error = $e->getMessage();
+} catch (LimitePrestamosException $e) {
     http_response_code(400);
     $error = $e->getMessage();
 }
